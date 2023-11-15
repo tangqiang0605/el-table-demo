@@ -1,8 +1,8 @@
 <template>
-  <el-table-column
-    v-for="column in newTableHeader"
-    v-bind="column"
-  ></el-table-column>
+  <el-table-column v-for="column in newTableHeader" v-bind="column">
+    <div v-if="typeof column.inner == 'string'" v-html="column.inner"></div>
+    <component v-else :is="column.inner"></component>
+  </el-table-column>
 </template>
 
 <script lang="ts" setup>
