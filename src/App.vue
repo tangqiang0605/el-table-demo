@@ -1,12 +1,12 @@
 <template>
-  <CustomTable
-    :tableData="tableData"
-    :table-headers="tableHeaderMapper"
-    v-loading="loading"
-  ></CustomTable>
+  <CustomTable :tableData="tableData" v-loading="loading">
+    <template #empty>暂无数据</template>
+    <CustomColumn :table-headers="tableHeaderMapper"></CustomColumn>
+  </CustomTable>
 </template>
 
 <script lang="ts" setup>
+import CustomColumn from "./components/custom-column/index.vue";
 import CustomTable from "./components/custom-table/index.vue";
 import { getData } from "./api/index";
 import { onMounted, ref } from "vue";
@@ -16,6 +16,7 @@ const tableHeaderMapper = {
   a: {
     label: "列a",
     width: "200",
+    inner: "<h1>hello</h1>",
   },
   b: "列b",
   c: "列c",
