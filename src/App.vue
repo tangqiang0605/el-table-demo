@@ -12,7 +12,10 @@ import { onMounted, ref } from "vue";
 const tableData = ref<any>([]);
 // 定义新的Header结构，key为column的prop/key，value为column的label
 const tableHeaderMapper = {
-  a: "列a",
+  a: {
+    label: "列a",
+    width: "200",
+  },
   b: "列b",
   c: "列c",
   d: "列d",
