@@ -2,6 +2,7 @@
   <CustomTable
     :tableData="tableData"
     :table-headers="tableHeaderMapper"
+    v-loading="loading"
   ></CustomTable>
 </template>
 
@@ -25,9 +26,12 @@ const tableHeaderMapper = {
   h: "列h",
   i: "列i",
 };
+const loading = ref(false);
 onMounted(() => {
+  loading.value = true;
   getData().then((res: any) => {
     tableData.value = res.data;
+    loading.value = false;
   });
 });
 </script>

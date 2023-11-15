@@ -15,6 +15,6 @@ export function getData() {
           i: "Tom",
         }),
       });
-    }, 200);
+    }, 2000);
   });
 }
