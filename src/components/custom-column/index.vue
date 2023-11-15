@@ -1,18 +1,34 @@
 <template>
   <el-table-column v-for="column in newTableHeader" v-bind="column">
-    <div v-if="typeof column.inner == 'string'" v-html="column.inner"></div>
-    <component v-else :is="column.inner"></component>
+    <template v-for="(value, key) in column.slot" #[key]="scope">
+      <slot :name="value" v-bind="scope">
+        <div v-if="column.inner && String(key) == 'default'">
+          <div
+            v-if="typeof column.inner == 'string'"
+            v-html="column.inner"
+          ></div>
+          <component v-else :is="column.inner"></component>
+        </div>
+      </slot>
+    </template>
+    <template v-if="!column.slot" #default>
+      <div v-if="column.inner">
+        <div v-if="typeof column.inner == 'string'" v-html="column.inner"></div>
+        <component v-else :is="column.inner"></component>
+      </div>
+    </template>
   </el-table-column>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onBeforeUpdate } from "vue";
+import { ref, onMounted, onBeforeUpdate, useSlots } from "vue";
 export type Mapper<T> = {
   [P in keyof T as string]?: string | object;
 };
 const prop = defineProps<{
   tableHeaders: Mapper<any>;
 }>();
+const slots = useSlots();
 const newTableHeader = ref<any>({});
 const genNewTableHeader = () => {
   newTableHeader.value = { ...prop.tableHeaders };
@@ -45,6 +61,18 @@ const genNewTableHeader = () => {
         )
       ) {
         Reflect.set(column, "prop", key);
+      }
+      // 处理插槽
+      const slotKeys = Object.keys(slots);
+      for (let key of slotKeys) {
+        const res = key.match(/^(\S+)-(\S+)/);
+        // 查找不到则res为null
+        if (res && res[2] == Reflect.get(column, "key")) {
+          if (!Reflect.has(column, "slot")) {
+            Reflect.set(column, "slot", {});
+          }
+          Reflect.set(Reflect.get(column, "slot"), res[1], res[0]);
+        }
       }
     }
   }

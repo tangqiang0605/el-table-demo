@@ -1,7 +1,9 @@
 <template>
   <CustomTable :tableData="tableData" v-loading="loading">
     <template #empty>暂无数据</template>
-    <CustomColumn :table-headers="tableHeaderMapper"></CustomColumn>
+    <CustomColumn :table-headers="tableHeaderMapper">
+      <template #default-a="scope"> I am slot of a {{ scope.$index }}</template>
+    </CustomColumn>
   </CustomTable>
 </template>
 
@@ -10,7 +12,7 @@ import CustomColumn from "./components/custom-column/index.vue";
 import CustomTable from "./components/custom-table/index.vue";
 import CustomButton from "./components/CustomButton.vue";
 import { getData } from "./api/index";
-import { h, onMounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 const tableData = ref<any>([]);
 // 定义新的Header结构，key为column的prop/key，value为column的label
 const tableHeaderMapper = {
